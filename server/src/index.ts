@@ -1,6 +1,6 @@
 /**
  * Project: Exclusive Drop API
- * Developer: Ilya Zeldnerhngjhngjhgjh
+ * Developer: Ilya ZeldnerBahaa
  */
 
 import express, { Request, Response, NextFunction } from "express";
