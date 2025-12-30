@@ -1,0 +1,344 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+
+html, body {
+  font-family: "Poppins", sans-serif;
+}
+
+:root {
+  --bg: #E8F9FD;
+  --green: #7EE081;
+  --greenText: #419D78;
+  --muted: rgba(0, 0, 0, 0.55);
+}
+
+/* ---------------------------
+   Global layout
+--------------------------- */
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem;
+}
+
+/* ---------------------------
+   Shared helpers
+--------------------------- */
+.container {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.section {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ---------------------------
+   Header + nav (StarterPage)
+--------------------------- */
+.header {
+  background: var(--green);
+  padding: 1.5rem 0;
+  border-bottom-left-radius: 1.75rem;
+  border-bottom-right-radius: 1.75rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.header-title {
+  text-align: center;
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.nav {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.nav-btn {
+  background: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.6rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 160ms ease, filter 160ms ease;
+}
+
+.nav-btn:hover {
+  transform: scale(1.05);
+  filter: brightness(1.02);
+}
+
+.nav-btn-login { color: var(--greenText); }
+.nav-btn-register { color: #ff6b6b; }
+
+/* ---------------------------
+   Hero (StarterPage)
+--------------------------- */
+.hero {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.hero-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--greenText);
+  margin-top: 0.75rem;
+}
+
+.hero-sub {
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 1.05rem;
+  max-width: 40rem;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* ---------------------------
+   Cards + grid (StarterPage)
+--------------------------- */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.card {
+  background: #fff;
+  border-radius: 1.75rem;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+}
+
+.card-pad { padding: 1.25rem; }
+
+.card-hover {
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.card-hover:hover {
+  transform: scale(1.02);
+  box-shadow: 0 18px 45px rgba(0,0,0,0.16);
+}
+
+.feature-icon {
+  width: 5rem;
+  margin: 0 auto 0.75rem;
+  display: block;
+}
+
+.feature-title {
+  font-weight: 800;
+  font-size: 1.15rem;
+  text-align: center;
+  color: var(--greenText);
+}
+
+.feature-desc {
+  text-align: center;
+  color: var(--muted);
+  margin-top: 0.35rem;
+  font-size: 0.95rem;
+}
+
+/* ---------------------------
+   Footer (StarterPage)
+--------------------------- */
+.footer {
+  margin-top: 5rem;
+  padding: 1.25rem 1rem;
+  background: var(--green);
+  color: #fff;
+  text-align: center;
+  font-weight: 800;
+  border-top-left-radius: 1.75rem;
+  border-top-right-radius: 1.75rem;
+  box-shadow: 0 -10px 25px rgba(0,0,0,0.08);
+}
+
+/* ---------------------------
+   Buttons (shared)
+--------------------------- */
+.btn {
+  width: 100%;
+  border: none;
+  border-radius: 0.85rem;
+  padding: 0.9rem 1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--green);
+  color: #fff;
+  transition: filter 160ms ease, transform 160ms ease;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.08);
+  transform: scale(1.02);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-link {
+  margin-top: 0.9rem;
+  background: transparent;
+  color: var(--greenText);
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+/* ---------------------------
+   ✅ Login/Auth layout (your new components)
+--------------------------- */
+.auth-shell {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 64rem;
+  min-height: 70vh;
+  display: flex;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+}
+
+.auth-left {
+  flex: 1;
+  background: #fff;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-left-inner {
+  width: 100%;
+  max-width: 26rem;
+}
+
+.auth-right {
+  flex: 1;
+  background: var(--greenText);
+  color: #fff;
+  padding: 3rem;
+  display: none;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .auth-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.auth-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--greenText);
+  margin-bottom: 0.25rem;
+}
+
+.auth-subtitle {
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+.auth-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(0,0,0,0.65);
+  margin-bottom: 0.4rem;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 0.85rem;
+  border: 2px solid rgba(126, 224, 129, 0.6);
+  outline: none;
+  font-weight: 600;
+}
+
+.auth-input:focus {
+  box-shadow: 0 0 0 4px rgba(65, 157, 120, 0.20);
+}
+
+.auth-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.9rem;
+  font-size: 0.9rem;
+}
+
+.auth-link {
+  color: var(--greenText);
+  font-weight: 800;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+.welcome-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+}
+
+.welcome-text {
+  opacity: 0.9;
+  font-size: 1.05rem;
+  max-width: 28rem;
+}
+
+.welcome-footer {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.5rem;
+  opacity: 0.7;
+  font-size: 0.85rem;
+}
