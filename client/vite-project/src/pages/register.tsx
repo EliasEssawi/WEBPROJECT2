@@ -22,7 +22,7 @@ const Register: React.FC = () => {
   const [userAnswer, setUserAnswer] = useState<string>("");
   const [message, setMessage] = useState<string>("");
 
-  const [userData, setUserData] = useState<UserData>({
+  const initialUserData: UserData = {
     name: "",
     email: "",
     password: "",
@@ -30,7 +30,9 @@ const Register: React.FC = () => {
     pin: "",
     confirmPin: "",
     dateOfBirth: "",
-  });
+  };
+
+  const [userData, setUserData] = useState<UserData>(initialUserData);
 
   const generateCaptcha = (): void => {
     const a = Math.floor(Math.random() * 10 + 1);
@@ -82,6 +84,9 @@ const Register: React.FC = () => {
     try {
       const res = await axios.post<RegisterResponse>(`${API_BASE}/register`, payload);
       setMessage(res.data.message || "Registered successfully!");
+      //Reset form
+      setUserData(initialUserData);
+      setUserAnswer(""); // If you have a CAPTCHA field
       alert("Registered successfully!");
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
