@@ -1,9 +1,23 @@
 import React, { useState, useEffect } from "react";
+import axios, { AxiosError } from "axios";
+import { RegisterRequest, RegisterResponse } from "../Types/Register";
+
+const API_BASE = "/api";
 
 function Register() {
   const [captcha, setCaptcha] = useState({ question: "", answer: "" });
   const [userAnswer, setUserAnswer] = useState("");
-
+  const [message, setMessage] = useState<string>(""); // User feedback message
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    pin: "",
+    confirmPin: "",
+    dateOfBirth: "",
+  });
+  
   // Generate simple arithmetic captcha
   const generateCaptcha = () => {
     const a = Math.floor(Math.random() * 10 + 1);
@@ -15,18 +29,56 @@ function Register() {
     generateCaptcha();
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
 
+    setUserData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  
+  //handles the submet of registring (when clicking regester button)
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();// Stops the page from reloading (pure React behavior).
+
+    // logic for the CAPTCHA (TODO: Move CAPTCHA to server)
     if (userAnswer !== captcha.answer) {
-      alert("Incorrect CAPTCHA answer.");
+      setMessage("Incorrect CAPTCHA answer.");
       generateCaptcha();
       setUserAnswer("");
       return;
     }
 
-    // TODO: handle registration logic
-    alert("Registered successfully!");
+    // Password validation
+    if (userData.password !== userData.confirmPassword) {
+      setMessage("Passwords do not match.");
+      return;
+    }
+
+    // Pin validation
+    if (userData.pin !== userData.confirmPin) {
+      setMessage("PINs do not match.");
+      return;
+    }
+
+    const payload: RegisterRequest = {
+      name: userData.name.trim(),
+      email: userData.email.toLowerCase(),
+      password: userData.password,
+      pin: userData.pin,
+      dateOfBirth: userData.dateOfBirth,
+    };
+
+    try {
+      //Send RegisterRequest to the server this is like sendToServer({ RegisterRequest })
+      const res = await axios.post<RegisterResponse>(`${API_BASE}/register`,payload);
+      setMessage(res.data.message);
+      alert("Registered successfully!");
+    } catch (err) {
+        const error = err as AxiosError<any>;
+        setMessage(error.response?.data?.message || "Registration failed.");
+      }
   };
 
   return (
@@ -56,25 +108,25 @@ function Register() {
               {/* Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1">Name</label>
-                <input type="text" required className="w-full px-4 py-3 text-black rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green transition" placeholder="Your name" />
+                <input type="text" name="name" required value={userData.name} onChange={handleChange} className="w-full px-4 py-3 text-black rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green transition" placeholder="Your name" />
               </div>
 
               {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1">Email</label>
-                <input type="email" required className="w-full px-4 py-3 text-black rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green transition" placeholder="you@example.com" />
+                <input type="email" name="email" required value={userData.email} onChange={handleChange} className="w-full px-4 py-3 text-black rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green transition" placeholder="you@example.com" />
               </div>
 
               {/* Password */}
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1">Password</label>
-                <input type="password" required className="w-full px-4 py-3 text-black rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green transition" placeholder="••••••••" />
+                <input type="password" name="password" required value={userData.password} onChange={handleChange} className="w-full px-4 py-3 text-black rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green transition" placeholder="••••••••" />
               </div>
 
               {/* Confirm Password */}
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1">Confirm Password</label>
-                <input type="password" required className="w-full px-4 py-3 text-black rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green transition" placeholder="••••••••" />
+                <input type="password" name="confirmPassword" required value={userData.confirmPassword} onChange={handleChange} className="w-full px-4 py-3 text-black rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green transition" placeholder="••••••••" />
               </div>
 
               {/* Pin */}
@@ -82,7 +134,10 @@ function Register() {
                 <label className="block text-sm font-medium text-gray-600 mb-1">Pin (4 digits)</label>
                 <input
                   type="password"
+                  name="pin"
                   required
+                  value={userData.pin} 
+                  onChange={handleChange}
                   maxLength={4}
                   pattern="\d{4}"
                   inputMode="numeric"
@@ -96,7 +151,10 @@ function Register() {
                 <label className="block text-sm font-medium text-gray-600 mb-1">Confirm Pin</label>
                 <input
                   type="password"
+                  name="confirmPin"
                   required
+                  value={userData.confirmPin} 
+                  onChange={handleChange}
                   maxLength={4}
                   pattern="\d{4}"
                   inputMode="numeric"
@@ -108,7 +166,7 @@ function Register() {
               {/* Date of Birth */}
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1">Date of Birth</label>
-                <input type="date" required className="w-full px-4 py-3 text-black rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green transition" />
+                <input type="date" name="dateOfBirth" required value={userData.dateOfBirth} onChange={handleChange} className="w-full px-4 py-3 text-black rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-green transition" />
               </div>
 
               {/* CAPTCHA */}
@@ -133,6 +191,12 @@ function Register() {
                 REGISTER
               </button>
 
+              {/* Show error messages */}
+              {message && (
+                <p className="text-center text-sm text-red-500 mt-3">
+                  {message}
+                </p>
+              )}
               <div className="text-right mt-4 text-sm">
                 <a href="/login" className="text-blue-500 hover:underline">Already have an account? Log in</a>
               </div>
