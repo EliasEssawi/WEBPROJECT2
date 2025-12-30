@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 
-import LoginLayout from "../components/login/LoginLayout";
-import LoginCard from "../components/login/LoginCard";
-import LoginLeftPanel from "../components/login/LoginLeftPanel";
-import LoginRightPanel from "../components/login/LoginRightPanel";
-import LoginHeader from "../components/login/LoginHeader";
-import LoginInput from "../components/login/LoginInput";
-import ButtonLogin from "../components/login/ButtonLogin";
-import LoginActions from "../components/login/LoginActions";
+import LoginLayout from "../components/login/Layout";
+import LoginCard from "../components/login/Card";
+import LoginLeftPanel from "../components/login/LeftPanel";
+import LoginRightPanel from "../components/login/RightPanel";
+import LoginHeader from "../components/login/Header";
+import LoginInput from "../components/login/Input";
+import ButtonLogin from "../components/login/Button";
+import LoginActions from "../components/login/Actions";
 
 export default function Login() {
   const [usernameOrEmail, setUsernameOrEmail] = useState<string>("");
@@ -53,7 +53,7 @@ export default function Login() {
         </LoginLeftPanel>
 
         {/* RIGHT: welcome */}
-        <LoginRightPanel />
+        <LoginRightPanel/>
       </LoginCard>
     </LoginLayout>
   );
