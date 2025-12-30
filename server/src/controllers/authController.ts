@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { User } from "../models/User";
 import bcrypt from "bcrypt";
-import { RegisterSchema } from "../utils/validators";
+import { RegisterSchema, LoginSchema } from "../utils/validators";
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -35,16 +35,47 @@ export const register = async (req: Request, res: Response) => {
 
     // Save to MongoDB
     const user = new User({
-      name,
       email,
       password: hashedPassword,
-      pin,
-      dateOfBirth,
     });
 
     await user.save();
 
     res.json({success: true, message: "User registered successfully" });
+  } catch (err) {
+    res.status(500).json({success: false, message: "Database error" });
+  }
+};
+
+
+export const login = async (req: Request, res: Response) => {
+  try {
+    const parsed = LoginSchema.safeParse(req.body);
+
+    /*
+    if (!parsed.success) {
+      const firstError = parsed.error.issues[0];
+      return res.status(400).json({ message: firstError?.message});
+    }
+    */
+    //this is like doing const const name = parsed.data.name; email = parsed.data.email; ...
+    //const {email} = parsed.data;
+    const { email, password } = req.body;
+
+    // check if user already exists
+    const userData = await User.findOne({ email });
+    if (!userData) {
+      return  res.status(400).json({
+        success: false,
+        message: "User don't exists" + email,
+      });
+    }
+
+    const valid = await bcrypt.compare(password, userData.password);
+    if (!valid) 
+      return res.status(400).json({ message: "Invalid credentials" });
+
+    res.status(200).json({ message: "Login successful" });
   } catch (err) {
     res.status(500).json({success: false, message: "Database error" });
   }

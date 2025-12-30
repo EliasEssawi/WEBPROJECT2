@@ -11,7 +11,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 
-import { register } from "./controllers/authController";
+import { register, login } from "./controllers/authController";
 
 dotenv.config();
 const app = express();
@@ -54,6 +54,7 @@ const buyActionLimiter = rateLimit({
 });
 
 app.post("/api/register", buyActionLimiter, register);
+app.post("/api/login", buyActionLimiter, login)
 
 // Listen on 127.0.0.1 to perfectly match Vite's proxy target
 const PORT = 5000;

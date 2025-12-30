@@ -26,3 +26,10 @@ export const RegisterSchema = z.object({
 
   dateOfBirth: z.coerce.date(),
 });
+
+export const LoginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .regex(emailRegex, { message: "Please enter a valid email address" }),
+});

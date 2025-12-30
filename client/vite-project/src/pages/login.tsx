@@ -8,14 +8,50 @@ import LoginHeader from "../components/login/Header";
 import LoginInput from "../components/login/Input";
 import ButtonLogin from "../components/login/Button";
 import LoginActions from "../components/login/Actions";
+import { LoginRequest, LoginResponse } from "../Types/Login";
+import axios, { AxiosError } from "axios";
+
+const API_BASE = "/api";
 
 export default function Login() {
-  const [usernameOrEmail, setUsernameOrEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  type UserData = {
+    email: string;
+    password: string;
+  };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [message, setMessage] = useState<string>("");
+
+  const initialUserData: UserData = {
+    email: "",
+    password: ""
+  };
+
+  const [userData, setUserData] = useState<UserData>(initialUserData);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+      const { name, value } = e.target;
+      setUserData((prev) => ({ ...prev, [name]: value }));
+    };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    console.log({ usernameOrEmail, password });
+    setMessage("");
+
+    const payload: LoginRequest = {
+      email: userData.email.trim().toLowerCase(),
+      password: userData.password
+    };
+
+    try {
+      const res = await axios.post<LoginResponse>(`${API_BASE}/login`, payload);
+      setMessage(res.data.message || "Registered successfully!");
+      //Reset form
+      setUserData(initialUserData);
+      alert("Registered successfully!");
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      setMessage(error.response?.data?.message || "Login failed.");
+    }
   };
 
   return (
@@ -29,21 +65,24 @@ export default function Login() {
             <LoginInput
               label="Username or Email"
               placeholder="you@example.com"
-              value={usernameOrEmail}
-              onChange={(e) => setUsernameOrEmail(e.target.value)}
-              name="usernameOrEmail"
+              value={userData.email}
+              onChange={handleChange}
+              name="email"
             />
 
             <LoginInput
               label="Password"
               type="password"
               placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={userData.password}
+              onChange={handleChange}
               name="password"
             />
 
             <ButtonLogin />
+
+            {/* Message */}
+            {message ? <div className="error">{message}</div> : null}
 
             <LoginActions
               onForgotPassword={() => alert("Forgot password feature coming soon")}
