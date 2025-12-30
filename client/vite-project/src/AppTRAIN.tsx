@@ -16,14 +16,16 @@ import Navigationbar from './components/NavigationAndSwitcher/NavigationBar';
 function App() {
   return (
 
+     
     <BrowserRouter>
+   <Layout>
       <Routes>
         <Route path="/" element={<StarterPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/chooseProfile" element={<ChooseProfile />} />
       </Routes> 
-     
+      </Layout>
     </BrowserRouter>
     
   );

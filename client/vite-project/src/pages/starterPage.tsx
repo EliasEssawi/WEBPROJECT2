@@ -1,4 +1,5 @@
 import React from "react";
+import Layout from "../components/NavigationAndSwitcher/Layout";
 
 type Page = "login" | "register";
 
@@ -18,6 +19,7 @@ const StarterPage: React.FC = () => {
   ];
 
   return (
+    
     <div className="page">
       {/* HEADER */}
       <header className="header">
@@ -60,7 +62,8 @@ const StarterPage: React.FC = () => {
           </button>
         </div>
       </section>
-
+     
+     
       {/* FEATURES */}
       <section className="section">
         <h3 className="features-title">What You Can Do</h3>
@@ -72,6 +75,7 @@ const StarterPage: React.FC = () => {
               <div className="feature-title">{f.title}</div>
               <div className="feature-desc">{f.desc}</div>
             </div>
+            
           ))}
         </div>
       </section>
