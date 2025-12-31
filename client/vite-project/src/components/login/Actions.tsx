@@ -1,20 +1,16 @@
 import React from "react";
 
 type Props = {
-  onForgotPassword: () => void;
-  registerHref?: string;
+  text : string;
+  actionFunction: () => void;
 };
 
-export default function LoginActions({ onForgotPassword, registerHref = "/register" }: Props) {
+export default function Action({ actionFunction, text }: Props) {
   return (
     <div className="auth-actions">
-      <button type="button" className="btn-link" onClick={onForgotPassword}>
-        Forgot password?
+       <button type="button" className="btn-link" onClick={actionFunction}>
+        {text}
       </button>
-
-      <a href={registerHref} className="auth-link">
-        Create account →
-      </a>
     </div>
   );
 }

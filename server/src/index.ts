@@ -13,6 +13,8 @@ import rateLimit from "express-rate-limit";
 
 import { register, login } from "./controllers/authController";
 
+import { User } from "./models/User";
+
 dotenv.config();
 const app = express();
 
@@ -55,6 +57,16 @@ const buyActionLimiter = rateLimit({
 
 app.post("/api/register", buyActionLimiter, register);
 app.post("/api/login", buyActionLimiter, login)
+
+app.get("/api/getAllUsers", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+    console.log(users);
+  } catch (err) {
+    res.status(500).json();
+  }
+});
 
 // Listen on 127.0.0.1 to perfectly match Vite's proxy target
 const PORT = 5000;

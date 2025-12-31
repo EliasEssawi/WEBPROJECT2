@@ -78,7 +78,7 @@ const Register: React.FC = () => {
       email: userData.email.trim().toLowerCase(),
       password: userData.password,
       pin: userData.pin,
-      dateOfBirth: userData.dateOfBirth,
+      dateOfBirth: userData.dateOfBirth
     };
 
     try {

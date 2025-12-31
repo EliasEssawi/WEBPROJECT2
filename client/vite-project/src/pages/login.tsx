@@ -84,10 +84,17 @@ export default function Login() {
             {/* Message */}
             {message ? <div className="error">{message}</div> : null}
 
-            <LoginActions
-              onForgotPassword={() => alert("Forgot password feature coming soon")}
-              registerHref="/register"
+          <div className="flex justify-between">
+            <LoginActions 
+              text = "Forgot password?"
+              actionFunction={() => {window.location.href = "./forgotPassword";}}
             />
+            <LoginActions
+              text = "Create account →"
+              actionFunction={() => {window.location.href = "./register";}}
+            />
+          </div>
+           
           </form>
         </LoginLeftPanel>
 

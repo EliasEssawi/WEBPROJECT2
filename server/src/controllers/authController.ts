@@ -35,8 +35,12 @@ export const register = async (req: Request, res: Response) => {
 
     // Save to MongoDB
     const user = new User({
+      name,
       email,
       password: hashedPassword,
+      pin,
+      dateOfBirth,
+      profiles: [] // ✅ start with empty profiles
     });
 
     await user.save();

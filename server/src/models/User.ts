@@ -1,5 +1,11 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+interface Profile {
+  profileName: string,
+	pin: string,
+	progress: Record<string, any>,
+	points : Number
+}
 // TYPES
 export interface IUser extends Document {
   name: string;
@@ -8,7 +14,21 @@ export interface IUser extends Document {
   pin: string;
   dateOfBirth: Date;
   createdAt: Date;
+  profiles: Profile[];
 }
+
+const ProfileSchema = new mongoose.Schema<Profile>({
+  profileName: String,
+  pin: String,
+  progress: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {}
+  },
+  points: {
+    type: Number,
+    default: 0
+  }
+});
 
 const UserSchema = new Schema<IUser>({
   name: { type: String, required: true, trim: true },
@@ -27,6 +47,12 @@ const UserSchema = new Schema<IUser>({
   dateOfBirth: { type: Date, required: true },
 
   createdAt: { type: Date, default: Date.now },
+
+  profiles: {
+    type: [ProfileSchema],
+    default: [],      // important!
+    required: true
+  }
 });
 
 export const User = mongoose.model<IUser>("User", UserSchema);
