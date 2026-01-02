@@ -11,7 +11,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 
-import { register, login } from "./controllers/authController";
+import { register, login, sendResetPassCode, verifyPassCode, changePassword } from "./controllers/authController";
 
 import { User } from "./models/User";
 import { addProfile } from "./controllers/profileController";
@@ -64,8 +64,11 @@ const buyActionLimiter = rateLimit({
 
 app.post("/api/register", buyActionLimiter, register);
 app.post("/api/login", buyActionLimiter, login)
-app.post("/api/profiles", addProfile);
-app.post("/api/profiles/verify-pin", verifyProfilePin);
+app.post("/api/profiles", buyActionLimiter, addProfile);
+app.post("/api/profiles/verify-pin", buyActionLimiter,verifyProfilePin);
+app.post("/api/sendResetPassCode", buyActionLimiter,sendResetPassCode);
+app.post("/api/verifyPassCode", buyActionLimiter,verifyPassCode);
+app.post("/api/changePassword", buyActionLimiter, changePassword)
 
 app.get("/api/profiles/:email", async (req: Request, res: Response) => {
   try {

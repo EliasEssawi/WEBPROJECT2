@@ -15,6 +15,8 @@ export interface IUser extends Document {
   dateOfBirth: Date;
   createdAt: Date;
   profiles: Profile[];
+  resetCode?: string | undefined;
+  resetCodeExpiresAt?: Date | undefined;
 }
 
 const ProfileSchema = new mongoose.Schema<Profile>({
@@ -52,7 +54,19 @@ const UserSchema = new Schema<IUser>({
     type: [ProfileSchema],
     default: [],      // important!
     required: true
-  }
+  },
+
+  resetCode: {
+    type: String,
+    default: undefined,
+    required: false
+  },
+
+  resetCodeExpiresAt: {
+    type: Date,
+    default: undefined,
+    required: false
+  },
 });
 
 export const User = mongoose.model<IUser>("User", UserSchema);
