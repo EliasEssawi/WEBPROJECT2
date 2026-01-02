@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import LoginLayout from "../components/login/Layout";
 import LoginCard from "../components/login/Card";
@@ -19,6 +20,8 @@ export default function Login() {
     password: string;
   };
 
+  const navigate = useNavigate(); // ✅ שלב 1 – ניווט
+
   const [message, setMessage] = useState<string>("");
 
   const initialUserData: UserData = {
@@ -28,10 +31,10 @@ export default function Login() {
 
   const [userData, setUserData] = useState<UserData>(initialUserData);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-      const { name, value } = e.target;
-      setUserData((prev) => ({ ...prev, [name]: value }));
-    };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    setUserData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -43,11 +46,17 @@ export default function Login() {
     };
 
     try {
-      const res = await axios.post<LoginResponse>(`${API_BASE}/login`, payload);
-      setMessage(res.data.message || "Registered successfully!");
-      //Reset form
-      setUserData(initialUserData);
-      alert("Registered successfully!");
+      await axios.post<LoginResponse>(`${API_BASE}/login`, payload);
+
+      // 🧱 שלב 1.1 – שמירת המשתמש המחובר
+      localStorage.setItem(
+        "loggedInUser",
+        JSON.stringify({ email: payload.email })
+      );
+
+      // 🧱 שלב 1.2 – מעבר למסך בחירת פרופיל
+      navigate("/chooseProfile");
+
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       setMessage(error.response?.data?.message || "Login failed.");
@@ -57,7 +66,6 @@ export default function Login() {
   return (
     <LoginLayout>
       <LoginCard>
-        {/* LEFT: form */}
         <LoginLeftPanel>
           <LoginHeader />
 
@@ -81,25 +89,22 @@ export default function Login() {
 
             <ButtonLogin />
 
-            {/* Message */}
-            {message ? <div className="error">{message}</div> : null}
+            {message && <div className="error">{message}</div>}
 
-          <div className="flex justify-between">
-            <LoginActions 
-              text = "Forgot password?"
-              actionFunction={() => {window.location.href = "./forgotPassword";}}
-            />
-            <LoginActions
-              text = "Create account →"
-              actionFunction={() => {window.location.href = "./register";}}
-            />
-          </div>
-           
+            <div className="flex justify-between">
+              <LoginActions
+                text="Forgot password?"
+                actionFunction={() => (window.location.href = "./forgotPassword")}
+              />
+              <LoginActions
+                text="Create account →"
+                actionFunction={() => (window.location.href = "./register")}
+              />
+            </div>
           </form>
         </LoginLeftPanel>
 
-        {/* RIGHT: welcome */}
-        <LoginRightPanel/>
+        <LoginRightPanel />
       </LoginCard>
     </LoginLayout>
   );

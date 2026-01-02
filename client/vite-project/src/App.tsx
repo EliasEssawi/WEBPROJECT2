@@ -13,6 +13,7 @@ const API_BASE = "/api";
 import Layout from './components/NavigationAndSwitcher/Layout';
 import Navigationbar from './components/NavigationAndSwitcher/NavigationBar';
 import ForgotPassword from './pages/forgotPass';
+import AddProfile from './pages/addprofile';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/chooseProfile" element={<ChooseProfile />} />
+        <Route path="/addprofile" element={<AddProfile />} />
         <Route path="/forgotPassword" element={<ForgotPassword />}/>
       </Routes> 
      

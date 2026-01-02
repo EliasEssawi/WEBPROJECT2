@@ -1,69 +1,67 @@
 import React, { useEffect, useState } from "react";
+import ProfileCard from "../components/profile/ProfileCard";
+import PinModal from "../components/profile/PinModal";
 
 type Profile = {
   profileName: string;
-  pin: string | number;
 };
 
 type User = {
-  username: string;
-  profiles?: Profile[];
+  email: string;
 };
 
-type DbData = {
-  users?: User[];
-};
+type Page = "addprofile";
 
 const ChooseProfile: React.FC = () => {
+  const goToPage = (page: Page): void => {
+    if (page === "addprofile") window.location.href = "/addprofile";
+  };
+
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const [pinInputs, setPinInputs] = useState<string[]>(["", "", "", ""]);
   const [pinError, setPinError] = useState<boolean>(false);
   const [profiles, setProfiles] = useState<Profile[]>([]);
 
+  /* ===========================
+     Fetch profiles
+  =========================== */
   useEffect(() => {
     const fetchProfiles = async (): Promise<void> => {
       try {
-        const res = await fetch("./db.json");
-        const data: DbData = await res.json();
-
         const savedUserRaw = localStorage.getItem("loggedInUser");
-        const savedUser = savedUserRaw ? (JSON.parse(savedUserRaw) as Partial<User>) : null;
+        if (!savedUserRaw) return;
 
-        const username =
-          savedUser?.username ||
-          data.users?.[0]?.username ||
-          "";
+        const savedUser = JSON.parse(savedUserRaw) as { email: string };
+        if (!savedUser.email) return;
 
-        const user = data.users?.find((u) => u.username === username) ?? null;
+        setCurrentUser({ email: savedUser.email });
 
-        if (user) {
-          setCurrentUser(user);
-          setProfiles(user.profiles ?? []);
+        const res = await fetch(
+          `http://127.0.0.1:5001/api/profiles/${savedUser.email}`
+        );
+        const data = await res.json();
+
+        if (data.success) {
+          setProfiles(data.profiles || []);
         } else {
-          setCurrentUser(null);
           setProfiles([]);
         }
       } catch (err) {
-        console.error("Failed to load db.json:", err);
+        console.error("Failed to fetch profiles:", err);
       }
     };
 
     fetchProfiles();
   }, []);
 
-  const focusPin = (index: number): void => {
-    const el = document.getElementById(`pin-${index}`) as HTMLInputElement | null;
-    el?.focus();
-  };
-
+  /* ===========================
+     PIN logic
+  =========================== */
   const openPin = (profile: Profile): void => {
     setSelectedProfile(profile);
     setPinInputs(["", "", "", ""]);
     setPinError(false);
-
-    // focus first input after modal opens
-    setTimeout(() => focusPin(0), 0);
   };
 
   const closePin = (): void => {
@@ -73,7 +71,6 @@ const ChooseProfile: React.FC = () => {
   };
 
   const handlePinChange = (value: string, idx: number): void => {
-    // allow only one digit (or empty)
     if (!/^\d?$/.test(value)) return;
 
     setPinInputs((prev) => {
@@ -83,7 +80,8 @@ const ChooseProfile: React.FC = () => {
     });
 
     if (value && idx < 3) {
-      focusPin(idx + 1);
+      const el = document.getElementById(`pin-${idx + 1}`) as HTMLInputElement;
+      el?.focus();
     }
   };
 
@@ -92,98 +90,100 @@ const ChooseProfile: React.FC = () => {
     e: React.KeyboardEvent<HTMLInputElement>
   ): void => {
     if (e.key === "Backspace" && !pinInputs[idx] && idx > 0) {
-      focusPin(idx - 1);
+      const el = document.getElementById(`pin-${idx - 1}`) as HTMLInputElement;
+      el?.focus();
     }
   };
 
-  const handlePinSubmit = (): void => {
-    if (!selectedProfile) return;
+  /* ✅ VERIFY PIN VIA BACKEND */
+  const handlePinSubmit = async (): Promise<void> => {
+    if (!selectedProfile || !currentUser) return;
 
     const enteredPin = pinInputs.join("");
-    const realPin = String(selectedProfile.pin);
 
-    if (enteredPin === realPin) {
-      localStorage.setItem("activeProfile", JSON.stringify(selectedProfile));
-      window.location.href = "/mainPageBest"; // change route if needed
-      return;
+    try {
+      const res = await fetch(
+        "http://127.0.0.1:5001/api/profiles/verify-pin",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: currentUser.email,
+            profileName: selectedProfile.profileName,
+            pin: enteredPin,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        localStorage.setItem(
+          "activeProfile",
+          JSON.stringify(data.profile)
+        );
+        window.location.href = "/mainPageBest";
+        return;
+      }
+
+      setPinError(true);
+      setPinInputs(["", "", "", ""]);
+    } catch (err) {
+      console.error(err);
+      setPinError(true);
     }
-
-    setPinError(true);
-    setPinInputs(["", "", "", ""]);
-    focusPin(0);
   };
 
+  /* ===========================
+     Render
+  =========================== */
   return (
     <div className="page">
-      {/* HEADER */}
       <header className="header">
         <h1 className="header-title">Who’s Learning Today?</h1>
       </header>
 
-      {/* PROFILES */}
-      <section className="profiles" aria-label="Choose a profile">
-        {profiles.map((profile, idx) => (
-          <div
-            key={`${profile.profileName}-${idx}`}
-            className="profile-item"
+      {/* Add Profile */}
+      <div className="add-profile-wrapper">
+        <button
+          className="add-profile-btn"
+          onClick={() => goToPage("addprofile")}
+        >
+          ➕ Add Profile
+        </button>
+      </div>
+
+      {/* Profiles */}
+      <section className="profiles-grid">
+        {/* Parent */}
+        <ProfileCard
+          name="Parent"
+          emoji="👨‍👩‍👧"
+          onClick={() => openPin({ profileName: "Parent" })}
+        />
+
+        {/* Children */}
+        {profiles.map((profile) => (
+          <ProfileCard
+            key={profile.profileName}
+            name={profile.profileName}
+            emoji="🧒"
             onClick={() => openPin(profile)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && openPin(profile)}
-            aria-label={`Open PIN for ${profile.profileName}`}
-          >
-            <div className="card card-pad card-hover" style={{ position: "relative" }}>
-              <div className="lock">🔒</div>
-
-              <img
-                src={`https://cdn-icons-png.flaticon.com/512/2922/29225${
-                  idx % 2 === 0 ? "10" : "06"
-                }.png`}
-                className="avatar"
-                alt="Profile avatar"
-              />
-            </div>
-
-            <p className="profile-name">{profile.profileName}</p>
-          </div>
+          />
         ))}
       </section>
 
-      {/* PIN MODAL */}
+      {/* PIN Modal */}
       {selectedProfile && (
-        <div className="modal-backdrop" onClick={closePin} role="dialog" aria-modal="true">
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h2 className="modal-title">{selectedProfile.profileName}&apos;s PIN</h2>
-            <p className="modal-sub">Enter the 4-digit PIN to continue</p>
-
-            {pinError && <p className="error">Wrong PIN, try again.</p>}
-
-            <div className="pin-row">
-              {pinInputs.map((val, idx) => (
-                <input
-                  key={idx}
-                  id={`pin-${idx}`}
-                  maxLength={1}
-                  value={val}
-                  onChange={(e) => handlePinChange(e.target.value, idx)}
-                  onKeyDown={(e) => handlePinBackspace(idx, e)}
-                  className="pin-input"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  aria-label={`PIN digit ${idx + 1}`}
-                />
-              ))}
-            </div>
-
-            <button type="button" onClick={handlePinSubmit} className="btn btn-primary">
-              Continue
-            </button>
-
-            <button type="button" onClick={closePin} className="btn-link">
-              Cancel
-            </button>
-          </div>
-        </div>
+        <PinModal
+          profileName={selectedProfile.profileName}
+          pinInputs={pinInputs}
+          pinError={pinError}
+          onChange={handlePinChange}
+          onBackspace={handlePinBackspace}
+          onSubmit={handlePinSubmit}
+          onClose={closePin}
+        />
       )}
     </div>
   );

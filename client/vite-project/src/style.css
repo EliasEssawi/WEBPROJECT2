@@ -182,7 +182,7 @@ html, body {
    Buttons (shared)
 --------------------------- */
 .btn {
-  width: 100%;
+  width: fit-content;
   border: none;
   border-radius: 0.85rem;
   padding: 0.9rem 1rem;
@@ -342,3 +342,285 @@ html, body {
   opacity: 0.7;
   font-size: 0.85rem;
 }
+
+
+
+/* LEFT SIDE CONTAINER */
+.add-profile-left {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 20px 10px;
+}
+
+/* TITLE */
+.add-profile-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #419D78;
+  margin-bottom: 8px;
+}
+
+/* SUBTITLE */
+.add-profile-subtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 28px;
+  line-height: 1.4;
+}
+
+/* FORM */
+.add-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* BUTTON FIX */
+.add-profile-form button {
+  margin-top: 16px;
+  align-self: flex-start; /* או center אם את רוצה */
+}
+
+/* OPTIONAL: INPUT GROUP SPACING */
+.add-profile-form .input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ===========================
+   Choose Profile Page
+=========================== */
+
+.profiles {
+  max-width: 72rem;
+  margin: 2.5rem auto 0;
+  text-align: center;
+}
+
+/* Add Profile button */
+.profiles > .btn {
+  margin-bottom: 2.5rem;
+}
+
+/* GRID */
+.profiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+/* PROFILE CARD (mapped from profile-item) */
+.profile-item {
+  background: #fff;
+  width: 160px;
+  padding: 1.4rem 1rem 1.2rem;
+  border-radius: 1.25rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-item:hover {
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+/* avatar (emoji fallback) */
+.profile-item::before {
+  content: "👦";
+  font-size: 2.5rem;
+  width: 72px;
+  height: 72px;
+  border-radius: 9999px;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+/* name */
+.profile-item p {
+  font-weight: 800;
+  color: var(--greenText);
+  font-size: 0.95rem;
+}
+
+/* ===========================
+   PIN MODAL
+=========================== */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  width: 100%;
+  max-width: 360px;
+  border-radius: 1.25rem;
+  padding: 1.75rem 1.5rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+.modal h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--greenText);
+  margin-bottom: 0.5rem;
+}
+
+.error {
+  color: #e11d48;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+/* PIN inputs */
+.pin-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.25rem 0;
+}
+
+.pin-row input {
+  width: 3rem;
+  height: 3rem;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  border: 2px solid var(--green);
+  outline: none;
+}
+
+.pin-row input:focus {
+  box-shadow: 0 0 0 3px rgba(65, 157, 120, 0.25);
+}
+
+/* modal buttons */
+.modal button {
+  width: 100%;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.modal button:first-of-type {
+  background: var(--green);
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.modal button:last-of-type {
+  background: transparent;
+  color: var(--greenText);
+}
+/* ===========================
+   Choose Profile (clean & used)
+=========================== */
+
+/* Add Profile – top center rectangle */
+.add-profile-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 2.25rem 0 2.75rem;
+}
+
+.add-profile-btn {
+  background: var(--green);
+  color: #fff;
+  font-weight: 800;
+  border: none;
+  border-radius: 1.25rem;
+  padding: 1.1rem 2.5rem;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 14px 30px rgba(0,0,0,0.15);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.add-profile-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.2);
+}
+
+/* Profiles grid */
+.profiles-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Profile card */
+.profile-card {
+  background: #fff;
+  width: 170px;
+  padding: 1.25rem 1rem 1.15rem;
+  border-radius: 1.25rem;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+  border: none;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 45px rgba(0,0,0,0.16);
+}
+
+/* Avatar */
+.profile-avatar {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 0.75rem;
+  border-radius: 9999px;
+  background: var(--bg);
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.profile-emoji {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+/* Lock icon */
+.profile-avatar .lock {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  font-size: 0.85rem;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+/* Name */
+.profile-name {
+  font-weight: 800;
+  color: var(--greenText);
+  font-size: 0.98rem;
+}
+
