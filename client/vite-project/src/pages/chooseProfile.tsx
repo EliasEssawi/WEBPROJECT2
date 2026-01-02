@@ -122,7 +122,7 @@ const ChooseProfile: React.FC = () => {
           "activeProfile",
           JSON.stringify(data.profile)
         );
-        window.location.href = "/mainPageBest";
+        window.location.href = "/parentPage";
         return;
       }
 

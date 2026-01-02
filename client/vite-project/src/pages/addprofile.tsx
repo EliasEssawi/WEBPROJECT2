@@ -66,6 +66,7 @@ const AddProfile: React.FC = () => {
 
       alert("Profile added successfully!");
       setProfileData(initialData);
+      window.history.back();
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       setMessage(error.response?.data?.message || "Failed to add profile.");
