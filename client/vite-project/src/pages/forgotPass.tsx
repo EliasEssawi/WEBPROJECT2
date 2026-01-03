@@ -79,6 +79,7 @@ export default function ForgotPassword() {
             setCode("");
             setConNewPassword("");
             setNewPassword("");
+             window.location.href = "./login"
         } catch (err) {
             const error = err as AxiosError<{ message?: string }>;
             setMessage(error.response?.data?.message || "change password faild.");
@@ -151,7 +152,7 @@ export default function ForgotPassword() {
                                 type="password"
                                 onChange={(e) => setConNewPassword(e.target.value)}>
                             </Input>
-                            <Button children="Send code"></Button>
+                            <Button children="Change password"></Button>
                         </form>
                     )}
 

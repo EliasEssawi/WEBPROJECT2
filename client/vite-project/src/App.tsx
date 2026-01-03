@@ -15,6 +15,7 @@ import Navigationbar from './components/NavigationAndSwitcher/NavigationBar';
 import ForgotPassword from './pages/forgotPass';
 import AddProfile from './pages/addprofile';
 import ParentPage from './pages/parentPage';
+import MainPage from './pages/mainPage';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/addprofile" element={<AddProfile />} />
         <Route path="/forgotPassword" element={<ForgotPassword />}/>
         <Route path="/parentPage" element={<ParentPage/>}/>
+        <Route path="/mainPage" element={<MainPage/>}/>
       </Routes> 
      
     </BrowserRouter>
