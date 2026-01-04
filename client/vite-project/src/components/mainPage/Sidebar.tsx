@@ -1,18 +1,16 @@
-interface MenuItem {
-    name: string;
-    icon: string;
-    url?: string;
-}
+import { MenuItem, SidebarAction } from "../../Types/Section";
 
 interface SidebarProps {
-    menuItems: MenuItem[];
-    primaryAction?: MenuItem;
-    secondaryAction?: MenuItem;
-    bottomAction?: MenuItem;
-    title: String;
+  menuItems: MenuItem[];
+  activeSection: string;
+  onSelect: (section: string) => void;
+  title: string;
+  secondaryMenu?: MenuItem[];
+  bottomAction?: SidebarAction;
 }
 
-export default function Sidebar({ menuItems, title, primaryAction, secondaryAction, bottomAction}: SidebarProps) {
+
+export default function Sidebar({ menuItems, title, secondaryMenu, bottomAction, onSelect, activeSection}: SidebarProps) {
   return (
     <aside className="w-72 bg-[#1A7822] text-white flex flex-col shrink-0">
       <div className="p-8 pb-4">
@@ -22,44 +20,51 @@ export default function Sidebar({ menuItems, title, primaryAction, secondaryActi
       </div>
       <nav className="flex-1 overflow-y-auto py-4 px-4 space-y-2">
         {menuItems.map((item) => (
-          <a
+          <button
             key={item.name}
-            href="#"
-            className="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/20 transition"
+            onClick={() => onSelect(item.name)}
+            className={`flex w-full items-center gap-4 px-4 py-3 rounded-xl transition
+              ${
+                activeSection === item.name
+                  ? "bg-white text-[#1A7822] font-bold"
+                  : "hover:bg-white/20"
+              }`}
           >
             <span className="text-xl">{item.icon}</span>
             <span className="font-medium">{item.name}</span>
-          </a>
+          </button>
         ))}
 
         <div className="my-4 border-t border-white/20" />
         
-       {primaryAction && (
-          <a
-            href={primaryAction.url || "#"}
-            className="flex items-center gap-4 px-4 py-3 rounded-xl bg-white text-[#1A7822] font-bold shadow-lg"
-          >
-            {primaryAction.icon} {primaryAction.name}
-          </a>
-        )}
+        
+        {secondaryMenu && (
+          secondaryMenu.map((item) => (
+            <button
+              key={item.name}
+              onClick={() => onSelect(item.name)}
+              className={`flex w-full items-center gap-4 px-4 py-3 rounded-xl transition
+                ${
+                  activeSection === item.name
+                    ? "bg-white text-[#1A7822] font-bold"
+                    : "hover:bg-white/20 text-white"
+                }`}
+            >
+              <span className="text-xl">{item.icon}</span>
+              <span className="font-medium">{item.name}</span>
+            </button>
+        )))}
 
-        {secondaryAction && (
-          <a
-            href={secondaryAction.url || "#"}
-            className="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/20 transition"
-          >
-            {secondaryAction.icon} {secondaryAction.name}
-          </a>
-        )}
       </nav>
        {bottomAction && (
         <div className="p-6 bg-black/10 border-t border-white/10">
-          <a
-            href={bottomAction.url || "#"}
+          <button
+            onClick={() => onSelect(bottomAction.section)}
             className="hover:scale-105 w-full flex justify-center items-center gap-2 bg-yellow-400 text-yellow-900 font-bold py-3 rounded-xl hover:bg-yellow-300 transition"
           >
-            {bottomAction.icon} {bottomAction.name}
-          </a>
+            <span className="text-xl">{bottomAction.icon}</span>
+            {bottomAction.label}
+          </button>
         </div>
       )}
     </aside>

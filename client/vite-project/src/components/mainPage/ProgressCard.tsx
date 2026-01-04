@@ -6,6 +6,7 @@ interface ProgressCardProps {
   progress: number;
   icon: string;
   url: string;
+  onClick?: () => void; // ✅ optional onClick handler
 }
 
 export default function ProgressCard({
@@ -14,6 +15,7 @@ export default function ProgressCard({
   progress,
   icon,
   url,
+  onClick,
 }: ProgressCardProps) {
   const [animatedProgress, setAnimatedProgress] = useState(0);
 
@@ -28,7 +30,7 @@ export default function ProgressCard({
 
   return (
     <div
-      onClick={() => navigate(url)}
+      onClick={onClick ? onClick : () => navigate(url)}
       className="relative group bg-white p-8 rounded-3xl shadow-xl border cursor-pointer hover:scale-105 transition-transform"
     >
       {/* Emoji */}
